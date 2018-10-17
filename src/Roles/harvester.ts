@@ -3,6 +3,8 @@ import { VirtualClass, Construct_cast } from "utils/virtual";
 import { AJob, JobStatus } from "Jobs/AJob";
 import { JobSupply } from "Jobs/JobSupply";
 import { JobHarvest } from "Jobs/JobHarvest";
+import { Supply } from "Strategy/Supply";
+import { JobUpgrade } from "Jobs/JobUpgrade";
 
 export class Harvester extends CreepRole{
 
@@ -15,7 +17,6 @@ export class Harvester extends CreepRole{
     }
 
     if (this.job) {
-      console.log(this.job)
       Construct_cast<AJob>(this.job);
       this.PerformJob(creep);
     }
@@ -38,7 +39,12 @@ export class Harvester extends CreepRole{
   DecideJob(creep: Creep): AJob {
 
     if (creep.carry.energy > 0) {
-      return new JobSupply();
+      if (Supply.ShouldUpgrade()) {
+        return new JobUpgrade();
+      }
+      else {
+        return new JobSupply();
+      }
     }
     else {
       return new JobHarvest();

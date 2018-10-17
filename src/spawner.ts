@@ -1,4 +1,5 @@
 import { Harvester } from "Roles/Harvester";
+import { Supply } from "Strategy/Supply";
 
 export class MySpawner {
 
@@ -10,7 +11,7 @@ export class MySpawner {
       if (spawner.spawning) {
         spawner.room.visual.text(spawner.spawning.name, spawner.pos.x, spawner.pos.y);
       }
-      else {
+      else if (Supply.ShouldSpawnHarvester()) {
         spawner.spawnCreep([MOVE, WORK, CARRY], "Creep" + this.GetNextFreeId(), { memory : new Harvester() } );
       }
 

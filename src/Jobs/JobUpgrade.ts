@@ -36,3 +36,5 @@ export class JobUpgrade extends AJob {
 
 
 }
+
+JobUpgrade.RegisterVirtualClass();

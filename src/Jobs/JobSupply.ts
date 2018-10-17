@@ -40,5 +40,6 @@ export class JobSupply extends AJob {
 
     }
 
-
 }
+
+JobSupply.RegisterVirtualClass();

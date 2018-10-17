@@ -35,3 +35,5 @@ export class JobHarvest extends AJob {
   }
 
 }
+
+JobHarvest.RegisterVirtualClass();

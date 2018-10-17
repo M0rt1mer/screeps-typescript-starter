@@ -86,3 +86,7 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+/.vs/screeps/v15/.suo
+/.vs
+/obj
+/bin
