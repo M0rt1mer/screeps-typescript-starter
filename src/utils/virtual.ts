@@ -1,8 +1,6 @@
 let VirtualRegistry: { [id: string]: any } = {};
 
-interface __Constructor<T> { 
-    new(...args: any[]): T;
-}
+type __Constructor<T> = Function & { prototype: T };
 
 export class VirtualClass {
   // identifier of instance
@@ -17,8 +15,8 @@ export class VirtualClass {
   public static RegisterVirtualClass() : void {
     VirtualRegistry[this.name] = this.prototype;
   }
- 
-  public static Construct<T extends VirtualClass>(this: __Constructor<T>, instance: any): T { 
+
+  public static Construct<T extends VirtualClass>(this: __Constructor<T>, instance: any): T | undefined { 
     if (!instance.classId) {
       return undefined;
     }
@@ -39,7 +37,7 @@ export function Construct_cast<T extends VirtualClass>(instance: any): T | undef
   return <T>instance;
 }
 
-function Checked_construct_cast<T extends VirtualClass>(instance: any, ctor: __Constructor<T>) : T { 
+function Checked_construct_cast<T extends VirtualClass>(instance: any, ctor: __Constructor<T>): T | undefined { 
   if (!instance.classId) {
     return undefined;
     }

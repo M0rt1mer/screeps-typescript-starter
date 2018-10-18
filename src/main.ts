@@ -1,7 +1,6 @@
 import { ErrorMapper } from "utils/ErrorMapper";
 import { MySpawner } from "spawner";
 import { CreepRole } from "CreepRole";
-import { VirtualClass, Construct_cast } from "utils/virtual";
 
 // When compiling TS to JS and bundling with rollup, the line numbers and file names in error messages change
 // This utility uses source maps to get the line numbers and file names of the original, TS source code
@@ -14,10 +13,9 @@ export const loop = ErrorMapper.wrapLoop(() => {
       delete Memory.creeps[name];
     }
     else {
-      console.log("Updateing " + name);
-      let role: CreepRole | undefined = Construct_cast<CreepRole>(Memory.creeps[name]);
+      let role = CreepRole.Construct(Memory.creeps[name]);
       if (role) {
-        role.Update(Game.creeps[name]);
+        role.Update(Game.creeps[name])
       }
     }
   }
