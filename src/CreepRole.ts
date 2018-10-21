@@ -1,4 +1,4 @@
-import { VirtualClass } from "utils/virtual";
+import { VirtualClass } from "utils/VirtualClass";
 
 export abstract class CreepRole extends VirtualClass implements CreepMemory {
 

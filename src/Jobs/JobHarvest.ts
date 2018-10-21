@@ -1,6 +1,11 @@
-import { AJob, JobStatus } from "./AJob";
+import { AJob, JobStatus } from "Jobs/AJob";
+import { MathUtils } from "utils/MathUtils";
 
 export class JobHarvest extends AJob {
+
+  GetJobIcon(): string {
+    return "⛏";
+  }
 
   targetId: string | undefined = undefined;
 
@@ -16,12 +21,13 @@ export class JobHarvest extends AJob {
       source = Game.getObjectById(this.targetId);
     }
     else {
-      source = creep.room.find(FIND_SOURCES)[0];
-      this.targetId = source.id;
+      let sources = creep.room.find(FIND_SOURCES);
+      source = MathUtils.PickRandom(sources);
     }
 
     //do harvesting
     if (source) {
+      this.targetId = source.id;
       if (creep.harvest(source) === ERR_NOT_IN_RANGE) {
         creep.moveTo(source, { visualizePathStyle: { stroke: '#ffaa00' } });
       }
