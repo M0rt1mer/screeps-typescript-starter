@@ -32,7 +32,7 @@ export class TaskEntry extends StaticClass{
     }
     //recalculate remaining capacity
     if (shouldRecalculate) {
-      this.remainingCapacity = this.task.CalculateTaskCapacity() - _.sum(this.consumers);
+      this.RecalculateCapacity();
     }
 
   }
@@ -45,6 +45,10 @@ export class TaskEntry extends StaticClass{
   RemoveConsumer(creep: Creep, taskCompleted : boolean) {
     let consumedCapacity = this.consumers[creep.name];
     delete this.consumers[creep.name];
+    this.RecalculateCapacity();
+  }
+
+  RecalculateCapacity() {
     this.remainingCapacity = this.task.CalculateTaskCapacity() - _.sum(this.consumers);
   }
 
@@ -125,13 +129,13 @@ export class TaskManager {
     return found;
   }
 
-  FindTaskTyped<T extends Task>(ctor: _VirtualClassConstructor<T>, filter: (task: Task) => boolean | undefined): T[] {
+  FindTaskTyped<T extends Task>(ctor: _VirtualClassConstructor<T>, filter?: (task: Task) => boolean | undefined): T[] {
     let found: T[] = [];
     for (var taskId in this.managedTasks) {
       let taskEntry = this.managedTasks[taskId];
       if (taskEntry.HasFreeSlots()) {
-        if (filter(taskEntry.task)) {
-          if (ctor.IsTypeOf(taskEntry.task)) {
+        if (ctor.IsTypeOf(taskEntry.task)) {
+          if (!filter || filter(taskEntry.task)) {
             found[found.length] = <T>taskEntry.task;
           }
         }
@@ -184,6 +188,10 @@ export class TaskManager {
 
     return this.managedTasks[this.assignedTasks[creep.name]].task;
 
+  }
+
+  RecalculateTask(task: Task) {
+    let taskEntry = this.managedTasks[task.GetTaskId()].RecalculateCapacity();
   }
 
 }

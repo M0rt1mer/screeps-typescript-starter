@@ -58,15 +58,6 @@ export class TaskHarvest extends Task {
     return this.sourceId;
   }
 
-  static BuildHarvestTasks(room: Room) {
-    let sources = room.find(FIND_SOURCES);
-    for (let source of sources) {
-      if (!Strategy.taskManager.HasTaskOfId(source.id)) {
-        Strategy.taskManager.ManageTask(new TaskHarvest(source));
-      }
-    }
-  }
-
 }
 
 TaskHarvest.RegisterVirtualClass();

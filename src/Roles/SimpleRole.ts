@@ -40,8 +40,9 @@ export abstract class SimpleRole extends CreepRole {
     if (this.job) {
       let status: JobStatus = this.job.Perform(creep, this);
       if (status == JobStatus.FINISHED) {
+        console.log("Job " + this.job.GetTypeName() + " finished");
         this.job = this.DecideJob(creep, this.disabledJobs);
-        this.PerformJob(creep);
+        //this.PerformJob(creep);
       }
       else if (status == JobStatus.FAILED) {
         this.disabledJobs[this.job.GetTypeName()] = 1;

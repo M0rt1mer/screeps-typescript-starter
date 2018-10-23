@@ -27,6 +27,7 @@ export class VirtualClass {
     //find and check it's type
     var instanceType = VirtualRegistry[instance.classId];
     if (!instanceType) {
+      console.log("Constructing unregistered virtual type: " + instance.classId)
       return undefined;
     }
 

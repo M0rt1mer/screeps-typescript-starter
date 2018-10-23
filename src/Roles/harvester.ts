@@ -1,11 +1,10 @@
 import { AJob, JobStatus } from "Jobs/AJob";
-import { JobSupply } from "Jobs/JobSupply";
-import { JobHarvest } from "Jobs/JobHarvest";
 import { JobUpgrade } from "Jobs/JobUpgrade";
 import { Strategy } from "Strategy/StrategyInterface";
 import { SimpleRole, DisabledJobsMap } from "./SimpleRole";
 import { JobBuild } from "Jobs/JobBuild";
 import { JobHarvestTask } from "Jobs/JobHarvestTask";
+import { JobTransferTask } from "Jobs/JobTransferTask";
 
 export class Harvester extends SimpleRole{
 
@@ -20,7 +19,7 @@ export class Harvester extends SimpleRole{
         return new JobUpgrade();
       }
       else {
-        return new JobSupply();
+        return new JobTransferTask();
       }
     }
     else {

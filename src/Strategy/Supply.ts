@@ -4,6 +4,7 @@ import { Transporter } from "Roles/Transporter";
 import { JobHarvestTask } from "Jobs/JobHarvestTask";
 import { TaskHarvest } from "TaskSystem/Tasks/TaskHarvest";
 import { TaskEntry } from "TaskSystem/TaskManager";
+import { TaskTransfer } from "TaskSystem/Tasks/TaskTransfer";
 
 export class Supply extends ISupply {
 
@@ -24,7 +25,8 @@ export class Supply extends ISupply {
     console.log("precalculate");
     let room = Game.rooms[_(Game.rooms).findLastKey()];
     console.log(room);
-    TaskHarvest.BuildHarvestTasks(room);
+    Supply.BuildHarvestTasks(room);
+    Supply.BuildTransferTasks(room);
   }
 
   ShouldSpawnHarvester(): boolean{
@@ -66,6 +68,45 @@ export class Supply extends ISupply {
 
   ShouldHarvesterMove(): boolean {
     return this.transporterList.length < 4;
+  }
+
+
+
+  static BuildHarvestTasks(room: Room) {
+    let sources = room.find(FIND_SOURCES);
+    for (let source of sources) {
+      if (!Strategy.taskManager.HasTaskOfId(source.id)) {
+        Strategy.taskManager.ManageTask(new TaskHarvest(source));
+      }
+    }
+  }
+
+  static BuildTransferTasks(room: Room) {
+    let spawns = room.find(FIND_MY_SPAWNS);
+    for (let spawn of spawns) {
+      if (!Strategy.taskManager.HasTaskOfId(spawn.id)) {
+        Strategy.taskManager.ManageTask(new TaskTransfer(spawn, RESOURCE_ENERGY, spawn.energyCapacity - spawn.energy));
+      }
+      else {
+        console.log("setting remaining capacity: " + (spawn.energyCapacity - spawn.energy));
+        let task = (<TaskTransfer>Strategy.taskManager.GetTaskOfId(spawn.id));
+        task.remainingAmount = spawn.energyCapacity - spawn.energy;
+        Strategy.taskManager.RecalculateTask(task);
+      }
+    }
+    let extensions = room.find(FIND_MY_STRUCTURES);
+    for (let extension of extensions) {
+      if (extension instanceof StructureExtension) {
+        if (!Strategy.taskManager.HasTaskOfId(extension.id)) {
+          Strategy.taskManager.ManageTask(new TaskTransfer(extension, RESOURCE_ENERGY, extension.energyCapacity - extension.energy));
+        }
+        else {
+          let task = (<TaskTransfer>Strategy.taskManager.GetTaskOfId(extension.id));
+          task.remainingAmount = extension.energyCapacity - extension.energy;
+          Strategy.taskManager.RecalculateTask(task);
+        }
+      }
+    }
   }
 
 }
