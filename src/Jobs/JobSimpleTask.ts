@@ -14,8 +14,8 @@ export abstract class JobSimpleTask<TaskType extends Task> extends AJob {
     let task: Task | undefined = Strategy.taskManager.GetAssignedTask(creep);
     //find task if no task assigned
     if (!Strategy.taskManager.GetAssignedTask(creep)) {
-      let [taskCandidate, myWorkCapacity] = this.FindTask(creep, memory);
-      if (taskCandidate && Strategy.taskManager.AssignTask(taskCandidate, creep, myWorkCapacity)) {
+      let taskCandidate = this.FindTask(creep, memory);
+      if (taskCandidate && Strategy.taskManager.AssignTask(taskCandidate, creep)) {
         task = taskCandidate;
       }
     }
@@ -37,7 +37,7 @@ export abstract class JobSimpleTask<TaskType extends Task> extends AJob {
     return JobStatus.FAILED;
   }
 
-  abstract FindTask(creep: Creep, memory: CreepMemory): [TaskType | undefined, number];
+  abstract FindTask(creep: Creep, memory: CreepMemory): TaskType | undefined;
 
 }
 

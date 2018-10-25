@@ -11,11 +11,9 @@ export class JobHarvestTask extends JobSimpleTask<TaskHarvest> {
     return "⛏";
   }
 
-  FindTask(creep: Creep, memory: CreepMemory): [TaskHarvest | undefined, number] {
-    console.log("Searching for harvest tasks");
+  FindTask(creep: Creep, memory: CreepMemory): TaskHarvest | undefined {
     let task = MathUtils.PickRandom(Strategy.taskManager.FindTaskTyped(TaskHarvest));
-    let myWorkCapacity = _.sum(creep.body, (body: BodyPartDefinition) => { return body.type == WORK ? 1 : 0; });
-    return [task, myWorkCapacity];
+    return task;
   }
 
 }

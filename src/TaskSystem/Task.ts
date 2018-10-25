@@ -16,4 +16,6 @@ export abstract class Task extends VirtualClass{
 
   abstract GetTaskId(): string;
 
+  abstract GetCreepCapacity(creep: Creep): number;
+
 }

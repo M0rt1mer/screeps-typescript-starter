@@ -3,22 +3,21 @@ import { Strategy } from "Strategy/StrategyInterface";
 import { TaskHarvest } from "TaskSystem/Tasks/TaskHarvest";
 import { TaskStatus, Task } from "TaskSystem/Task";
 import { JobSimpleTask } from "./JobSimpleTask";
-import { TaskTransfer } from "TaskSystem/Tasks/TaskTransfer";
 import { MathUtils } from "utils/MathUtils";
+import { TaskWork } from "TaskSystem/Tasks/TaskWork";
 
-export class JobTransferTask extends JobSimpleTask<TaskTransfer> {
+export class JobTaskWork extends JobSimpleTask<TaskWork> {
 
   GetJobIcon(): string {
-    return "⚡";
+    return "⚒";
   }
 
-  FindTask(creep: Creep, memory: CreepMemory): TaskTransfer | undefined {
-
-    let task = MathUtils.PickRandom(Strategy.taskManager.FindTaskTyped(TaskTransfer));
+  FindTask(creep: Creep, memory: CreepMemory): TaskWork | undefined {
+    
+    let task = MathUtils.PickRandom(Strategy.taskManager.FindTaskTyped(TaskWork));
     return task;
-
   }
 
 }
 
-JobTransferTask.RegisterVirtualClass();
+JobTaskWork.RegisterVirtualClass();

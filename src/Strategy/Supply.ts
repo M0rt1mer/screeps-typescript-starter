@@ -5,6 +5,8 @@ import { JobHarvestTask } from "Jobs/JobHarvestTask";
 import { TaskHarvest } from "TaskSystem/Tasks/TaskHarvest";
 import { TaskEntry } from "TaskSystem/TaskManager";
 import { TaskTransfer } from "TaskSystem/Tasks/TaskTransfer";
+import { TaskRepair } from "TaskSystem/Tasks/TaskRepair";
+import { TaskUpgrade } from "TaskSystem/Tasks/TaskUpgrade";
 
 export class Supply extends ISupply {
 
@@ -27,6 +29,8 @@ export class Supply extends ISupply {
     console.log(room);
     Supply.BuildHarvestTasks(room);
     Supply.BuildTransferTasks(room);
+    Supply.BuildRepairTasks(room);
+    Supply.BuildUpgradeTasks(room);
   }
 
   ShouldSpawnHarvester(): boolean{
@@ -105,6 +109,28 @@ export class Supply extends ISupply {
           task.remainingAmount = extension.energyCapacity - extension.energy;
           Strategy.taskManager.RecalculateTask(task);
         }
+      }
+    }
+  }
+
+  static BuildRepairTasks(room: Room) {
+    let structures = room.find(FIND_STRUCTURES);
+
+    for (let structure of structures) {
+      if (structure.hits < structure.hitsMax && structure.structureType != STRUCTURE_WALL) {
+        let taskId = TaskRepair.GetTaskIdFromStructure(structure);
+        if (!Strategy.taskManager.HasTaskOfId(taskId)) {
+          Strategy.taskManager.ManageTask(new TaskRepair(structure));
+        }
+      }
+    }
+
+  }
+
+  static BuildUpgradeTasks(room: Room) {
+    if (room.controller) {
+      if (!Strategy.taskManager.HasTaskOfId(TaskUpgrade.GetTaskIdFromController(room.controller))){
+        Strategy.taskManager.ManageTask(new TaskUpgrade(room.controller));
       }
     }
   }

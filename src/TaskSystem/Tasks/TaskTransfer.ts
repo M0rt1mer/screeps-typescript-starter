@@ -2,6 +2,9 @@ import { Task, TaskStatus } from "TaskSystem/Task";
 import { Strategy } from "Strategy/StrategyInterface";
 import { TaskManager } from "../TaskManager";
 
+/**
+ * A generic task that requires WORK parts
+ * */
 export class TaskTransfer extends Task {
 
   targetId: string;
@@ -67,6 +70,10 @@ export class TaskTransfer extends Task {
 
     //if all else fails
     return TaskStatus.Failed;
+  }
+
+  GetCreepCapacity(creep: Creep): number {
+    return creep.carry.energy;
   }
 
   GetTaskId(): string {

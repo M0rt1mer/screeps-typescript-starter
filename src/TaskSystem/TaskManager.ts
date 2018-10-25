@@ -37,7 +37,8 @@ export class TaskEntry extends StaticClass{
 
   }
 
-  AddConsumer(creep: Creep, consumedCapacity: number) {
+  AddConsumer(creep: Creep) {
+    let consumedCapacity = this.task.GetCreepCapacity(creep);
     this.consumers[creep.name] = consumedCapacity;
     this.remainingCapacity -= consumedCapacity;
   }
@@ -155,7 +156,7 @@ export class TaskManager {
     return result;
   }
 
-  AssignTask(task: Task, creep: Creep, consumedCapacity: number): boolean {
+  AssignTask(task: Task, creep: Creep): boolean {
     let taskEntry = this.managedTasks[task.GetTaskId()];
     if (!taskEntry) {
       return false;
@@ -163,7 +164,7 @@ export class TaskManager {
     if (!taskEntry.HasFreeSlots()) {
       return false;
     }
-    taskEntry.AddConsumer(creep, consumedCapacity);
+    taskEntry.AddConsumer(creep);
     this.assignedTasks[creep.name] = task.GetTaskId();
     return true;
   }

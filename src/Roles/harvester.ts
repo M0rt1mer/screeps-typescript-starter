@@ -1,10 +1,9 @@
 import { AJob, JobStatus } from "Jobs/AJob";
-import { JobUpgrade } from "Jobs/JobUpgrade";
 import { Strategy } from "Strategy/StrategyInterface";
 import { SimpleRole, DisabledJobsMap } from "./SimpleRole";
-import { JobBuild } from "Jobs/JobBuild";
 import { JobHarvestTask } from "Jobs/JobHarvestTask";
 import { JobTransferTask } from "Jobs/JobTransferTask";
+import { JobTaskWork } from "Jobs/JobTaskWork";
 
 export class Harvester extends SimpleRole{
 
@@ -12,11 +11,7 @@ export class Harvester extends SimpleRole{
 
     if (creep.carry.energy > 0) {
       if (Strategy.supplyStrategy.ShouldUpgrade()) {
-        //job will be disabled if theres nothing to build
-        if (!_.has(disabledJobs, JobBuild.GetTypeName())) {
-          return new JobBuild();
-        }
-        return new JobUpgrade();
+        return new JobTaskWork();
       }
       else {
         return new JobTransferTask();

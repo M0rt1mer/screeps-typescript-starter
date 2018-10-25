@@ -58,6 +58,10 @@ export class TaskHarvest extends Task {
     return this.sourceId;
   }
 
+  GetCreepCapacity(creep: Creep): number {
+    return _.sum(creep.body, (body: BodyPartDefinition) => { return body.type == WORK ? 1 : 0; });
+  }
+
 }
 
 TaskHarvest.RegisterVirtualClass();

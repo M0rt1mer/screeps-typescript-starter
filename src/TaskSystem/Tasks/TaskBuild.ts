@@ -1,0 +1,60 @@
+import { Task, TaskStatus } from "TaskSystem/Task";
+import { TaskWork } from "./TaskWork";
+
+export class TaskBuild extends TaskWork {
+
+  constructionSiteId: string;
+
+  constructor(site: ConstructionSite) {
+    super();
+    this.constructionSiteId = site.id;
+  }
+
+  CalculateTaskCapacity(): number {
+    let site = <ConstructionSite>Game.getObjectById(this.constructionSiteId);
+    return site.progressTotal - site.progress;
+  }
+
+  GetTaskCreepCapacity(): number {
+    return 1;
+  }
+
+  PerformTask(creep: Creep): TaskStatus {
+
+    if (creep.carry.energy == 0) {
+      return TaskStatus.Done;
+    }
+
+    let cSite = Game.getObjectById<ConstructionSite>(this.constructionSiteId);
+    if (cSite) {
+      if (creep.build(cSite) === ERR_NOT_IN_RANGE) {
+        creep.moveTo(cSite, { visualizePathStyle: { stroke: '#ffaa00' } });
+      }
+      return TaskStatus.NotDone;
+    }
+
+    //if all else fails
+    return TaskStatus.Failed;
+  }
+
+  GetCreepCapacity(creep: Creep): number {
+    return creep.carry.energy;
+  }
+
+  // TASK ID
+  GetTaskId(): string {
+    return TaskBuild.GetTaskIdFromConstructionSiteId(this.constructionSiteId);
+  }
+
+  static GetTaskIdFromConstructionSite(site: ConstructionSite) {
+    return this.GetTaskIdFromConstructionSiteId(site.id);
+  }
+
+  static GetTaskIdFromConstructionSiteId(siteId: string) {
+    return siteId;
+  }
+
+
+}
+
+TaskBuild.RegisterVirtualClass();
