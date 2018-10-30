@@ -41,6 +41,10 @@ export class TaskBuild extends TaskWork {
     return creep.carry.energy;
   }
 
+  CheckStillValid(): boolean {
+    return Game.getObjectById(this.constructionSiteId) !== undefined;
+  }
+
   // TASK ID
   GetTaskId(): string {
     return TaskBuild.GetTaskIdFromConstructionSiteId(this.constructionSiteId);

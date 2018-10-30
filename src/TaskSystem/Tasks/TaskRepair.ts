@@ -1,7 +1,7 @@
 import { TaskStatus } from "TaskSystem/Task";
 import { TaskWork } from "./TaskWork";
 
-declare const energyToHPRepairRation = 20;
+let energyToHPRepairRation = 20;
 
 export class TaskRepair extends TaskWork {
 
@@ -41,6 +41,10 @@ export class TaskRepair extends TaskWork {
 
   GetCreepCapacity(creep: Creep): number {
     return creep.carry.energy;
+  }
+
+  CheckStillValid(): boolean {
+    return this.CalculateTaskCapacity() > 0;
   }
 
   // TASK ID

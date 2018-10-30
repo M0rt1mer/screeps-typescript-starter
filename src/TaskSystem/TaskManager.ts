@@ -70,22 +70,30 @@ export class TaskManager {
 
   managedTasks: ManagedTaskList;
   assignedTasks: AssignedTaskList;
+  debugTasksRoom: string
 
   constructor() {
     if (!Memory.taskSystem) {
       Memory.taskSystem = {
         managedTasks: {},
-        assignedTasks: {}
+        assignedTasks: {},
+        debugTasksRoom: ""
       };
     }
     //create local binding for convenient access
     this.managedTasks = Memory.taskSystem.managedTasks;
     this.assignedTasks = Memory.taskSystem.assignedTasks;
+    this.debugTasksRoom = Memory.taskSystem.debugTasksRoom;
 
     //construct all task entries and their entries
     for (var task in this.managedTasks) {
       TaskEntry.Construct(this.managedTasks[task]);
       Task.Construct(this.managedTasks[task].task);
+      //check if task still valid, otherwise remove
+      if (!this.managedTasks[task].task.CheckStillValid()) {
+        delete this.managedTasks[task];
+        continue;
+      }
       //check consumers, update capacities
       this.managedTasks[task].CheckIfConsumersStillValid(this.assignedTasks);
     }
@@ -96,6 +104,7 @@ export class TaskManager {
       //invalid task assigned
       if (!(assignedTaskId in this.managedTasks)) {
         delete this.assignedTasks[creepName];
+        continue;
       }
       //task assigned, but creep not registered in consumers
       if (!(creepName in this.managedTasks[assignedTaskId].consumers)) {

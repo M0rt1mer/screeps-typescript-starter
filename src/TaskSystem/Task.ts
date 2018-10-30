@@ -18,4 +18,6 @@ export abstract class Task extends VirtualClass{
 
   abstract GetCreepCapacity(creep: Creep): number;
 
+  abstract CheckStillValid(): boolean;
+
 }

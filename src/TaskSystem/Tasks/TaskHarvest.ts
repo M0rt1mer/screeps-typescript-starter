@@ -62,6 +62,10 @@ export class TaskHarvest extends Task {
     return _.sum(creep.body, (body: BodyPartDefinition) => { return body.type == WORK ? 1 : 0; });
   }
 
+  CheckStillValid(): boolean {
+    return Game.getObjectById(this.sourceId) !== undefined;
+  }
+
 }
 
 TaskHarvest.RegisterVirtualClass();

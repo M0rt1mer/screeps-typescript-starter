@@ -7,6 +7,7 @@ import { TaskEntry } from "TaskSystem/TaskManager";
 import { TaskTransfer } from "TaskSystem/Tasks/TaskTransfer";
 import { TaskRepair } from "TaskSystem/Tasks/TaskRepair";
 import { TaskUpgrade } from "TaskSystem/Tasks/TaskUpgrade";
+import { TaskBuild } from "TaskSystem/Tasks/TaskBuild";
 
 export class Supply extends ISupply {
 
@@ -31,6 +32,7 @@ export class Supply extends ISupply {
     Supply.BuildTransferTasks(room);
     Supply.BuildRepairTasks(room);
     Supply.BuildUpgradeTasks(room);
+    Supply.BuildBuildTasks(room);
   }
 
   ShouldSpawnHarvester(): boolean{
@@ -124,13 +126,23 @@ export class Supply extends ISupply {
         }
       }
     }
-
   }
 
   static BuildUpgradeTasks(room: Room) {
     if (room.controller) {
       if (!Strategy.taskManager.HasTaskOfId(TaskUpgrade.GetTaskIdFromController(room.controller))){
         Strategy.taskManager.ManageTask(new TaskUpgrade(room.controller));
+      }
+    }
+  }
+
+  static BuildBuildTasks(room: Room) {
+    let constructions = room.find(FIND_CONSTRUCTION_SITES);
+
+    for (let construction of constructions) {
+      let taskId = TaskBuild.GetTaskIdFromConstructionSite(construction);
+      if (!Strategy.taskManager.HasTaskOfId(taskId)) {
+        Strategy.taskManager.ManageTask(new TaskBuild(construction));
       }
     }
   }

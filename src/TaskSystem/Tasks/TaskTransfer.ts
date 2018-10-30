@@ -19,20 +19,7 @@ export class TaskTransfer extends Task {
   }
 
   CalculateTaskCapacity(): number {
-    //let target = Game.getObjectById(this.targetId);
-
     return this.remainingAmount;
-
-    /*if (target instanceof Creep) {
-      return target.carryCapacity - _.sum(target.carry);
-    }
-    else if (target instanceof StructureSpawn || target instanceof StructureExtension) {
-      return target.energyCapacity - target.energy;
-    }
-    else if (target instanceof StructureStorage) {
-      return target.storeCapacity - _.sum(target.store);
-    }
-    return 0;*/
   }
 
   GetTaskCreepCapacity(): number {
@@ -74,6 +61,10 @@ export class TaskTransfer extends Task {
 
   GetCreepCapacity(creep: Creep): number {
     return creep.carry.energy;
+  }
+
+  CheckStillValid(): boolean {
+    return Game.getObjectById(this.targetId) !== undefined;
   }
 
   GetTaskId(): string {

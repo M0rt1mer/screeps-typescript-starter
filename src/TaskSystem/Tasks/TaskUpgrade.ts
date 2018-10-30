@@ -40,6 +40,11 @@ export class TaskUpgrade extends TaskWork {
     return _.sum(creep.body, (body: BodyPartDefinition) => { return body.type == WORK ? 1 : 0; });
   }
 
+
+  CheckStillValid(): boolean {
+    return Game.getObjectById(this.controllerId) !== undefined;
+  }
+
   // TASK ID
   GetTaskId(): string {
     return TaskUpgrade.GetTaskIdFromControllerId(this.controllerId);
