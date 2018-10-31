@@ -1,4 +1,4 @@
-import { Task } from "./Task";
+import { Task, TaskStatus } from "./Task";
 import { StaticClass, _VirtualClassConstructor } from "utils/VirtualClass";
 import { Strategy } from "Strategy/StrategyInterface";
 
@@ -63,6 +63,12 @@ export class TaskEntry extends StaticClass{
 
 }
 
+export interface TaskHistoryEvent {
+  creepName: string;
+  taskName: string;
+  event: TaskStatus;
+}
+
 type ManagedTaskList = { [taskId: string]: TaskEntry };
 type AssignedTaskList = { [creepName: string]: string };
 
@@ -71,6 +77,8 @@ export class TaskManager {
   managedTasks: ManagedTaskList;
   assignedTasks: AssignedTaskList;
   debugTasksRoom: string
+
+  taskDebugHistory: TaskHistoryEvent[];
 
   constructor() {
     if (!Memory.taskSystem) {
@@ -84,6 +92,12 @@ export class TaskManager {
     this.managedTasks = Memory.taskSystem.managedTasks;
     this.assignedTasks = Memory.taskSystem.assignedTasks;
     this.debugTasksRoom = Memory.taskSystem.debugTasksRoom;
+    this.taskDebugHistory = [];
+  }
+
+  RefreshState() {
+    this.taskDebugHistory = [];
+    console.log("init: " + this.taskDebugHistory.length);
 
     //construct all task entries and their entries
     for (var task in this.managedTasks) {
@@ -188,15 +202,15 @@ export class TaskManager {
 
   GetAssignedTask(creep: Creep): Task | undefined {
 
-    let assignedTask = this.assignedTasks[creep.name];
-    if (!assignedTask) {
+    if (!(creep.name in this.assignedTasks)) {
       return undefined;
     }
-    if (!this.managedTasks[assignedTask]) {
+    let assignedTask = this.assignedTasks[creep.name];
+    if (!(assignedTask in this.managedTasks)) {
       return undefined;
     }
 
-    return this.managedTasks[this.assignedTasks[creep.name]].task;
+    return this.managedTasks[assignedTask].task;
 
   }
 

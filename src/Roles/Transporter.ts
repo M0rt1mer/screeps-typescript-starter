@@ -34,5 +34,5 @@ export function DesignTransporter(maxEnergy: number, creepId: number): [BodyPart
   _.fill(result, WORK, 0, numWorks + 1)
   result = result.concat([MOVE, CARRY]);
   let options = { memory: new Transporter() };
-  return [result, "Transporter" + creepId, options];
+  return [result, "T" + creepId, options];
 }

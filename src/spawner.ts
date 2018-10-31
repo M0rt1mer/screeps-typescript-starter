@@ -21,11 +21,15 @@ export class MySpawner {
       else if (Strategy.supplyStrategy.ShouldSpawnHarvester()) {
         //spawner.spawnCreep([WORK, WORK, MOVE, CARRY], "Creep" + this.GetNextFreeId(), { memory: new Harvester() });
         let [bodyParts, creepName, options] = DesignHarvester(availableEnergy, this.GetNextFreeId());
-        spawner.spawnCreep(bodyParts, creepName, options);
+        if (spawner.spawnCreep(bodyParts, creepName, options) == OK) {
+          this.BumpNextFreeId();
+        }
       }
       else if (Strategy.supplyStrategy.ShouldSpawnTransporter()) {
         let [bodyParts, creepName, options] = DesignTransporter(availableEnergy, this.GetNextFreeId());
-        spawner.spawnCreep(bodyParts, creepName, options);
+        if (spawner.spawnCreep(bodyParts, creepName, options) == OK) {
+          this.BumpNextFreeId();
+        }
       }
 
     }
@@ -36,7 +40,11 @@ export class MySpawner {
     if (!Memory.nextFreeId) {
       Memory.nextFreeId = 0;
     }
-    return ++Memory.nextFreeId;
+    return Memory.nextFreeId;
+  }
+
+  static BumpNextFreeId() {
+    Memory.nextFreeId += 1;
   }
 
 }

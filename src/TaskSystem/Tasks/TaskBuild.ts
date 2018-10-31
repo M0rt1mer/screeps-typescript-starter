@@ -34,6 +34,7 @@ export class TaskBuild extends TaskWork {
     }
 
     //if all else fails
+    console.log("Failed finding game object: " + this.constructionSiteId);
     return TaskStatus.Failed;
   }
 
@@ -42,7 +43,7 @@ export class TaskBuild extends TaskWork {
   }
 
   CheckStillValid(): boolean {
-    return Game.getObjectById(this.constructionSiteId) !== undefined;
+    return Game.getObjectById(this.constructionSiteId) != undefined;
   }
 
   // TASK ID

@@ -100,15 +100,17 @@ export class Supply extends ISupply {
         Strategy.taskManager.RecalculateTask(task);
       }
     }
-    let extensions = room.find(FIND_MY_STRUCTURES);
-    for (let extension of extensions) {
-      if (extension instanceof StructureExtension) {
-        if (!Strategy.taskManager.HasTaskOfId(extension.id)) {
-          Strategy.taskManager.ManageTask(new TaskTransfer(extension, RESOURCE_ENERGY, extension.energyCapacity - extension.energy));
+    let structures = room.find(FIND_MY_STRUCTURES);
+    for (let structure of structures) {
+      if (structure instanceof StructureExtension || structure instanceof StructureTower ) {
+        if (!Strategy.taskManager.HasTaskOfId(structure.id)) {
+          if (structure.energy < structure.energyCapacity) {
+            Strategy.taskManager.ManageTask(new TaskTransfer(structure, RESOURCE_ENERGY, structure.energyCapacity - structure.energy));
+          }
         }
         else {
-          let task = (<TaskTransfer>Strategy.taskManager.GetTaskOfId(extension.id));
-          task.remainingAmount = extension.energyCapacity - extension.energy;
+          let task = (<TaskTransfer>Strategy.taskManager.GetTaskOfId(structure.id));
+          task.remainingAmount = structure.energyCapacity - structure.energy;
           Strategy.taskManager.RecalculateTask(task);
         }
       }

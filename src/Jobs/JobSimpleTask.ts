@@ -22,7 +22,9 @@ export abstract class JobSimpleTask<TaskType extends Task> extends AJob {
 
 
     if (task) {
-      switch (task.PerformTask(creep)) {
+      let status = task.PerformTask(creep);
+      Strategy.taskManager.taskDebugHistory.push({ creepName: creep.name, taskName: task.GetTypeName(), event: status });
+      switch (status) {
         case TaskStatus.Done:
           Strategy.taskManager.LeaveTask(creep, task, false);
           return JobStatus.FINISHED;

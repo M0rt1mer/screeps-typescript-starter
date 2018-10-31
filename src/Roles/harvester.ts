@@ -34,5 +34,5 @@ export function DesignHarvester(maxEnergy: number, creepId : number): [BodyPartC
   _.fill(result, WORK, 0, numWorks + 1)
   result = result.concat([MOVE, CARRY]);
   let options = { memory: new Harvester() };
-  return [result, "Harvester" + creepId, options];
+  return [result, "H" + creepId, options];
 }

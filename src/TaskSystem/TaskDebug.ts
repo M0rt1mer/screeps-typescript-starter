@@ -1,5 +1,6 @@
 import { Strategy } from "Strategy/StrategyInterface";
 import { TaskEntry } from "./TaskManager";
+import { TaskStatus } from "./Task";
 
 export function DebugTasks(){
 
@@ -47,5 +48,23 @@ export function DebugTasks(){
     room.visual.text(taskEntry.task.GetTaskId(), columns.taskId, debugLine, style);
     debugLine += 1;
   }
+
+  //--------------------------------------------------------------------
+  let columns2 = { creepName: 35, taskName: 42 };
+  
+  let styles = {
+    [TaskStatus.Done]: { color: "#00ff00" },
+    [TaskStatus.NotDone]: { color: "#00ffff" },
+    [TaskStatus.Failed]: { color: "#ff0000" }
+  }
+  
+  debugLine = 2;
+  for (let history of taskManager.taskDebugHistory) {
+    room.visual.text(history.creepName, columns2.creepName, debugLine, styles[history.event]);
+    room.visual.text(history.taskName, columns2.taskName, debugLine, styles[history.event]);
+    debugLine += 1;
+  }
+
+  console.log(taskManager.taskDebugHistory.length);
 
 }

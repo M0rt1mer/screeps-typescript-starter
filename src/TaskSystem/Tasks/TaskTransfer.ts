@@ -11,7 +11,7 @@ export class TaskTransfer extends Task {
   resource: ResourceConstant;
   remainingAmount: number;
 
-  constructor(target: Creep | StructureSpawn | StructureExtension | StructureStorage, resource: ResourceConstant, amount: number) {
+  constructor(target: Creep | StructureSpawn | StructureExtension | StructureStorage | StructureTower, resource: ResourceConstant, amount: number) {
     super();
     this.targetId = target.id;
     this.resource = resource;
@@ -64,7 +64,7 @@ export class TaskTransfer extends Task {
   }
 
   CheckStillValid(): boolean {
-    return Game.getObjectById(this.targetId) !== undefined;
+    return Game.getObjectById(this.targetId) != undefined && this.remainingAmount > 0;
   }
 
   GetTaskId(): string {

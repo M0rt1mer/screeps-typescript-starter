@@ -40,9 +40,14 @@ export class TaskUpgrade extends TaskWork {
     return _.sum(creep.body, (body: BodyPartDefinition) => { return body.type == WORK ? 1 : 0; });
   }
 
+  IsPriority() {
+    let controller = <StructureController>Game.getObjectById(this.controllerId);
+    return controller.ticksToDowngrade < 10000;
+  }
+
 
   CheckStillValid(): boolean {
-    return Game.getObjectById(this.controllerId) !== undefined;
+    return Game.getObjectById(this.controllerId) != undefined;
   }
 
   // TASK ID

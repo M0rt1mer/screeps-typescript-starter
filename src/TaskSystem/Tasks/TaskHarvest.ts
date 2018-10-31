@@ -63,7 +63,7 @@ export class TaskHarvest extends Task {
   }
 
   CheckStillValid(): boolean {
-    return Game.getObjectById(this.sourceId) !== undefined;
+    return Game.getObjectById(this.sourceId) != undefined;
   }
 
 }

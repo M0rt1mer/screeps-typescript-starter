@@ -5,6 +5,7 @@ import { TaskStatus, Task } from "TaskSystem/Task";
 import { JobSimpleTask } from "./JobSimpleTask";
 import { MathUtils } from "utils/MathUtils";
 import { TaskWork } from "TaskSystem/Tasks/TaskWork";
+import { TaskUpgrade } from "TaskSystem/Tasks/TaskUpgrade";
 
 export class JobTaskWork extends JobSimpleTask<TaskWork> {
 
@@ -13,7 +14,15 @@ export class JobTaskWork extends JobSimpleTask<TaskWork> {
   }
 
   FindTask(creep: Creep, memory: CreepMemory): TaskWork | undefined {
-    
+
+    let tasksUpgrade = Strategy.taskManager.FindTaskTyped(TaskUpgrade);
+    if (tasksUpgrade.length > 0) {
+      let taskUpgrade = tasksUpgrade[0]
+      if (taskUpgrade.IsPriority()) {
+        return taskUpgrade;
+      }
+    }
+
     let task = MathUtils.PickRandom(Strategy.taskManager.FindTaskTyped(TaskWork));
     return task;
   }
