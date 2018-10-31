@@ -14,6 +14,9 @@ export class TaskRepair extends TaskWork {
 
   CalculateTaskCapacity(): number {
     let site = <AnyStructure>Game.getObjectById(this.structureId);
+    if (!site) {
+      return 0;
+    }
     return (site.hitsMax - site.hits) / energyToHPRepairRation;
   }
 
