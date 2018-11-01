@@ -18,6 +18,14 @@ export abstract class JobSimpleTask<TaskType extends Task> extends AJob {
       if (taskCandidate && Strategy.taskManager.AssignTask(taskCandidate, creep)) {
         task = taskCandidate;
       }
+      else {
+        if (task) {
+          Strategy.taskManager.taskDebugHistory.push({ creepName: creep.name, taskName: task.GetTypeName(), event: TaskStatus.Failed });
+        }
+        else {
+          Strategy.taskManager.taskDebugHistory.push({ creepName: creep.name, taskName: "NO TASK FOUND", event: TaskStatus.Failed });
+        }
+      }
     }
 
 

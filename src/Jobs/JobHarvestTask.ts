@@ -17,6 +17,8 @@ export class JobHarvestTask extends JobSimpleTask<TaskHarvest> {
       return (<Source>Game.getObjectById(task.sourceId)).pos.getRangeTo(creep.pos);
     });
     return closestHarvest;
+    /*let harvestTask = MathUtils.PickRandom(Strategy.taskManager.FindTaskTyped(TaskHarvest));
+    return harvestTask;*/
   }
 
 }

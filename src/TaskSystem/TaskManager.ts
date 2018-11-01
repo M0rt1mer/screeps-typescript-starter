@@ -180,6 +180,12 @@ export class TaskManager {
   }
 
   AssignTask(task: Task, creep: Creep): boolean {
+    if (!task) {
+      return false;
+    }
+    if (!(task instanceof Task)) {
+      return false;
+    }
     let taskEntry = this.managedTasks[task.GetTaskId()];
     if (!taskEntry) {
       return false;
