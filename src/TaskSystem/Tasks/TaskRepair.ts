@@ -50,6 +50,10 @@ export class TaskRepair extends TaskWork {
     return this.CalculateTaskCapacity() > 0;
   }
 
+  GetTargetPos(): RoomPosition {
+    return (<AnyStructure>Game.getObjectById(this.structureId)).pos;
+  }
+
   // TASK ID
   GetTaskId(): string {
     return TaskRepair.GetTaskIdFromStructureId(this.structureId);

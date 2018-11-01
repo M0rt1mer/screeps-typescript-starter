@@ -40,7 +40,7 @@ export abstract class SimpleRole extends CreepRole {
     if (this.job) {
       let status: JobStatus = this.job.Perform(creep, this);
       if (status == JobStatus.FINISHED) {
-        console.log("Job " + this.job.GetTypeName() + " finished");
+        //console.log("Job " + this.job.GetTypeName() + " finished");
         this.job = this.DecideJob(creep, this.disabledJobs);
         //this.PerformJob(creep);
       }
@@ -49,7 +49,7 @@ export abstract class SimpleRole extends CreepRole {
         this.job = this.DecideJob(creep, this.disabledJobs);
       }
       else if (status == JobStatus.CONTINUE) {
-        creep.room.visual.text(this.job.GetJobIcon(), creep.pos.x, creep.pos.y);
+        creep.say(this.job.GetJobIcon());
       }
     }
   }

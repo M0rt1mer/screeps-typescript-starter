@@ -1,6 +1,7 @@
-import { DesignHarvester, DesignIdealHarvester, Harvester } from "Roles/Harvester";
+import { DesignIdealHarvester, Harvester } from "Roles/Harvester";
 import { Strategy } from "Strategy/StrategyInterface";
-import { DesignTransporter, DesignIdealTransporter, Transporter } from "Roles/Transporter";
+import { DesignIdealTransporter, Transporter } from "Roles/Transporter";
+import { DesignIdealWorker, Worker } from "Roles/Worker";
 
 export class MySpawner {
 
@@ -21,6 +22,12 @@ export class MySpawner {
       else if (Strategy.supplyStrategy.ShouldSpawnHarvester()) {
         let bodyParts = this.CalcBestPossibleFromTemplate(DesignIdealHarvester(), availableEnergy);
         if (spawner.spawnCreep(bodyParts, "H" + this.GetNextFreeId(), { memory: new Harvester() }) == OK) {
+          this.BumpNextFreeId();
+        }
+      }
+      else if (Strategy.supplyStrategy.ShouldSpawnWorker()) {
+        let bodyParts = this.CalcBestPossibleFromTemplate(DesignIdealWorker(), availableEnergy);
+        if (spawner.spawnCreep(bodyParts, "W" + this.GetNextFreeId(), { memory: new Worker() }) == OK) {
           this.BumpNextFreeId();
         }
       }

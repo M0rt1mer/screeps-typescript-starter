@@ -5,10 +5,10 @@ import { MathUtils } from "utils/MathUtils";
 export class JobTakeEnergy extends AJob {
 
   GetJobIcon(): string {
-    return "⬆";
+    return "🔋";
   }
 
-  harvesterName: string | undefined = undefined;
+  containerId: string | undefined = undefined;
 
   Perform(creep: Creep, memory: CreepMemory): JobStatus {
 
@@ -17,19 +17,25 @@ export class JobTakeEnergy extends AJob {
       return JobStatus.FINISHED;
     }
 
-    let harvester: Creep | undefined = undefined;
-    if (!this.harvesterName) {
-      this.harvesterName = MathUtils.PickRandom(Strategy.supplyStrategy.GetHarvesterList());
+    let container: StructureContainer | null = null;
+    if (!this.containerId) {
+      let filter = (structure: AnyStructure) => { return structure instanceof StructureContainer; };
+      let containers = creep.room.find<StructureContainer>(FIND_STRUCTURES, { filter: filter });
+      console.log("# containers: " + containers.length);
+      container = MathUtils.PickRandom(containers);
+      if (container) {
+        this.containerId = container.id;
+      }
     }
-    if (this.harvesterName) {
-      harvester = Game.creeps[this.harvesterName];
+    else{
+      container = Game.getObjectById<StructureContainer>(this.containerId);
     }
 
-    if (harvester) {
-      if (!creep.pos.inRangeTo(harvester.pos, 1)) {
-        creep.moveTo(harvester);
+    if (container) {
+      if (!creep.pos.inRangeTo(container.pos, 1)) {
+        creep.moveTo(container);
       }
-      harvester.transfer(creep, RESOURCE_ENERGY);
+      creep.withdraw(container, RESOURCE_ENERGY);
 
       return JobStatus.CONTINUE;
     }

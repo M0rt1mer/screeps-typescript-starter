@@ -16,6 +16,7 @@ export abstract class ISupply {
 
   abstract ShouldSpawnTransporter(): boolean;
   abstract ShouldHarvesterMove(): boolean;
+  abstract ShouldSpawnWorker(): boolean;
   //filtered worker lists
   abstract GetHarvesterList(): string[];
   abstract GetTransporterList(): string[];

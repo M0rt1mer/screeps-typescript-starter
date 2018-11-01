@@ -19,7 +19,8 @@ export function DebugTasks(){
   let columns = { taskType: 1, capacity: 10, creepCapacity: 15, taskId: 22 };
 
   let alignLeft = <TextStyle>{ align: "left" };
-  let activeTask = <TextStyle>{ color: "#ffff00" };
+  let activeTask = <TextStyle>{ color: "#ff3300" };
+  let fullTask = <TextStyle>{color:"#ffcc00"};
 
 
   room.visual.text("Capacity", columns.capacity, 1, alignLeft);
@@ -35,9 +36,13 @@ export function DebugTasks(){
 
     let style = <TextStyle>{};
     Object.assign(style, alignLeft);
-    if (numConsumers > 0) {
+    if (!taskEntry.HasFreeSlots()) {
+      Object.assign(style, fullTask);
+    }
+    else if (numConsumers > 0) {
       Object.assign(style, activeTask);
     }
+    
 
     room.visual.text(taskEntry.task.GetTypeName(), columns.taskType, debugLine, style);
     

@@ -23,8 +23,11 @@ export class JobTaskWork extends JobSimpleTask<TaskWork> {
       }
     }
 
-    let task = MathUtils.PickRandom(Strategy.taskManager.FindTaskTyped(TaskWork));
-    return task;
+    let workTasks = Strategy.taskManager.FindTaskTyped(TaskWork);
+    let closestWork = _.min(workTasks, (task: TaskWork) => {
+      return creep.pos.getRangeTo(task.GetTargetPos());
+    });
+    return closestWork;
   }
 
 }

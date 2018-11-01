@@ -6,6 +6,9 @@ export class TaskHarvest extends Task {
   sourceId: string;
   creepCapacity: number;
 
+  containerIds: string[];
+  lastContainerSearch: number = 0;
+
   constructor(source: Source) {
     super();
     this.sourceId = source.id;
@@ -24,8 +27,19 @@ export class TaskHarvest extends Task {
         }
       }
     }
+    this.containerIds = [];
+    this._FindContainers(source);
+  }
 
-    
+  _FindContainers(src: Source) {
+    this.containerIds = [];
+    let containers = src.room.find(FIND_STRUCTURES);
+    for (let structure of containers) {
+      if (structure instanceof StructureContainer) {
+        this.containerIds.push(structure.id);
+      }
+    }
+    this.lastContainerSearch = Game.time;
   }
 
   CalculateTaskCapacity(): number {
@@ -44,7 +58,24 @@ export class TaskHarvest extends Task {
 
     let source = Game.getObjectById<Source>(this.sourceId);
     if (source) {
-      if (creep.harvest(source) === ERR_NOT_IN_RANGE) {
+
+      if (this.lastContainerSearch < Game.time) {
+        this._FindContainers(source);
+      }
+
+      if (source.pos.inRangeTo(creep.pos, 1)) {
+        creep.harvest(source);
+        for (let containerId of this.containerIds) {
+          let container = Game.getObjectById<StructureContainer>(containerId);
+          if (!container) {
+            continue;
+          }
+          if (container.pos.inRangeTo(creep.pos,1)) {
+            creep.transfer(container, RESOURCE_ENERGY);
+          }
+        }
+      }
+      else {
         creep.moveTo(source, { visualizePathStyle: { stroke: '#ffaa00' } });
       }
       return TaskStatus.NotDone;

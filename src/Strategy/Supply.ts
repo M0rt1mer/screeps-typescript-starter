@@ -8,6 +8,7 @@ import { TaskTransfer } from "TaskSystem/Tasks/TaskTransfer";
 import { TaskRepair } from "TaskSystem/Tasks/TaskRepair";
 import { TaskUpgrade } from "TaskSystem/Tasks/TaskUpgrade";
 import { TaskBuild } from "TaskSystem/Tasks/TaskBuild";
+import { Worker } from "Roles/Worker";
 
 export class Supply extends ISupply {
 
@@ -15,6 +16,8 @@ export class Supply extends ISupply {
   harvesterList: string[] = [];
 
   transporterList: string[] = [];
+
+  workerList: string[] = [];
 
   //initialized on first use
   sourcesList: Source[] | undefined;
@@ -25,7 +28,9 @@ export class Supply extends ISupply {
     this.numHarvesters = this.harvesterList.length;
     //console.log(this.numHarvesters);
     this.transporterList = _.filter(Object.keys(Memory.creeps), (creepName: string) => { return Transporter.IsTypeOf(Memory.creeps[creepName]); });
-    console.log("precalculate");
+    this.workerList = _.filter(Object.keys(Memory.creeps), (creepName: string) => { return Worker.IsTypeOf(Memory.creeps[creepName]); });;
+
+
     let room = Game.rooms[_(Game.rooms).findLastKey()];
     console.log(room);
     Supply.BuildHarvestTasks(room);
@@ -55,7 +60,11 @@ export class Supply extends ISupply {
   }
 
   ShouldSpawnTransporter(): boolean {
-    return !this.ShouldSpawnHarvester() && this.transporterList.length < 4;
+    return !this.ShouldSpawnHarvester() && this.workerList.length > this.transporterList.length && this.transporterList.length < 2;
+  }
+
+  ShouldSpawnWorker(): boolean {
+    return !this.ShouldSpawnHarvester() && this.workerList.length <= this.transporterList.length + 1 && this.workerList.length < 2;
   }
 
   //only build/upgrade after all spawners and extensions are filled

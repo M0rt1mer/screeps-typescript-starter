@@ -5,12 +5,17 @@ import { JobTakeEnergy } from "Jobs/JobTakeEnergy";
 import { JobTransferTask } from "Jobs/JobTransferTask";
 import { JobTaskWork } from "Jobs/JobTaskWork";
 
-export class Transporter extends SimpleRole{
+export class Worker extends SimpleRole{
 
   DecideJob(creep: Creep, disabledJobs: DisabledJobsMap): AJob {
 
     if (creep.carry.energy > 0) {
-      return new JobTransferTask();
+      if (Strategy.supplyStrategy.ShouldUpgrade()) {
+        return new JobTaskWork();
+      }
+      else {
+        return new JobTransferTask();
+      }
     }
     else {
       return new JobTakeEnergy();
@@ -20,8 +25,8 @@ export class Transporter extends SimpleRole{
 
 }
 
-Transporter.RegisterVirtualClass();
+Worker.RegisterVirtualClass();
 
-export function DesignIdealTransporter(): BodyPartConstant[] {
-  return [MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY, MOVE, CARRY, CARRY];
+export function DesignIdealWorker(): BodyPartConstant[] {
+  return [MOVE,CARRY,WORK,MOVE,CARRY,WORK,CARRY,WORK,MOVE,CARRY,WORK];
 }

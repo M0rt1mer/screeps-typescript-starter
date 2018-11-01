@@ -63,6 +63,10 @@ export class TaskUpgrade extends TaskWork {
     return controllerId;
   }
 
+  GetTargetPos(): RoomPosition {
+    return (<StructureController>Game.getObjectById(this.controllerId)).pos;
+  }
+
 }
 
 TaskUpgrade.RegisterVirtualClass();

@@ -1,6 +1,8 @@
 import { Task, TaskStatus } from "TaskSystem/Task";
 import { TaskWork } from "./TaskWork";
 
+let energyToBuildRatio = 5;
+
 export class TaskBuild extends TaskWork {
 
   constructionSiteId: string;
@@ -12,7 +14,7 @@ export class TaskBuild extends TaskWork {
 
   CalculateTaskCapacity(): number {
     let site = <ConstructionSite>Game.getObjectById(this.constructionSiteId);
-    return site.progressTotal - site.progress;
+    return (site.progressTotal - site.progress) / energyToBuildRatio;
   }
 
   GetTaskCreepCapacity(): number {
@@ -44,6 +46,10 @@ export class TaskBuild extends TaskWork {
 
   CheckStillValid(): boolean {
     return Game.getObjectById(this.constructionSiteId) != undefined;
+  }
+
+  GetTargetPos(): RoomPosition {
+    return (<ConstructionSite>Game.getObjectById(this.constructionSiteId)).pos;
   }
 
   // TASK ID
