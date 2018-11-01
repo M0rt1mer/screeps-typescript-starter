@@ -36,3 +36,7 @@ export function DesignHarvester(maxEnergy: number, creepId : number): [BodyPartC
   let options = { memory: new Harvester() };
   return [result, "H" + creepId, options];
 }
+
+export function DesignIdealHarvester(): BodyPartConstant[] {
+  return [MOVE,CARRY,WORK,WORK,WORK,WORK,WORK,WORK,WORK];
+}

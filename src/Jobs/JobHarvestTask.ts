@@ -12,8 +12,11 @@ export class JobHarvestTask extends JobSimpleTask<TaskHarvest> {
   }
 
   FindTask(creep: Creep, memory: CreepMemory): TaskHarvest | undefined {
-    let task = MathUtils.PickRandom(Strategy.taskManager.FindTaskTyped(TaskHarvest));
-    return task;
+    let harvestTasks = Strategy.taskManager.FindTaskTyped(TaskHarvest);
+    let closestHarvest = _.min(harvestTasks, (task: TaskHarvest) => {
+      return (<Source>Game.getObjectById(task.sourceId)).pos.getRangeTo(creep.pos);
+    });
+    return closestHarvest;
   }
 
 }

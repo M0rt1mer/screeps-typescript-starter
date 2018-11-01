@@ -36,3 +36,7 @@ export function DesignTransporter(maxEnergy: number, creepId: number): [BodyPart
   let options = { memory: new Transporter() };
   return [result, "T" + creepId, options];
 }
+
+export function DesignIdealTransporter(): BodyPartConstant[] {
+  return [MOVE,CARRY,WORK,MOVE,CARRY,WORK,CARRY,WORK,MOVE,CARRY,WORK];
+}

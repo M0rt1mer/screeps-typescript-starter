@@ -1,6 +1,6 @@
-import { DesignHarvester } from "Roles/Harvester";
+import { DesignHarvester, DesignIdealHarvester } from "Roles/Harvester";
 import { Strategy } from "Strategy/StrategyInterface";
-import { DesignTransporter } from "Roles/Transporter";
+import { DesignTransporter, DesignIdealTransporter } from "Roles/Transporter";
 
 export class MySpawner {
 
@@ -19,15 +19,14 @@ export class MySpawner {
         spawner.room.visual.text(spawner.spawning.name, spawner.pos.x, spawner.pos.y);
       }
       else if (Strategy.supplyStrategy.ShouldSpawnHarvester()) {
-        //spawner.spawnCreep([WORK, WORK, MOVE, CARRY], "Creep" + this.GetNextFreeId(), { memory: new Harvester() });
-        let [bodyParts, creepName, options] = DesignHarvester(availableEnergy, this.GetNextFreeId());
-        if (spawner.spawnCreep(bodyParts, creepName, options) == OK) {
+        let bodyParts = this.CalcBestPossibleFromTemplate(DesignIdealHarvester(), availableEnergy);
+        if (spawner.spawnCreep(bodyParts, "H" + this.GetNextFreeId) == OK) {
           this.BumpNextFreeId();
         }
       }
       else if (Strategy.supplyStrategy.ShouldSpawnTransporter()) {
-        let [bodyParts, creepName, options] = DesignTransporter(availableEnergy, this.GetNextFreeId());
-        if (spawner.spawnCreep(bodyParts, creepName, options) == OK) {
+        let bodyParts = this.CalcBestPossibleFromTemplate(DesignIdealTransporter(), availableEnergy);
+        if (spawner.spawnCreep(bodyParts, "T" + this.GetNextFreeId()) == OK) {
           this.BumpNextFreeId();
         }
       }
@@ -45,6 +44,18 @@ export class MySpawner {
 
   static BumpNextFreeId() {
     Memory.nextFreeId += 1;
+  }
+
+  static CalcBestPossibleFromTemplate(template: BodyPartConstant[], availableEnergy: number) : BodyPartConstant[] {
+    let finalTemplate: BodyPartConstant[] = [];
+    let remainingEnergy = availableEnergy;
+    for (let bodyPart of template) {
+      if (BODYPART_COST[bodyPart] <= remainingEnergy) {
+        finalTemplate.push(bodyPart);
+        remainingEnergy -= BODYPART_COST[bodyPart];
+      }
+    }
+    return finalTemplate;
   }
 
 }
